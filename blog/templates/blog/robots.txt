@@ -1,0 +1,3 @@
+Sitemap: http://www.usefulpython.com/sitemap.xml
+User-agent: *
+Allow: /

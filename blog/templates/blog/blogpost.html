@@ -1,0 +1,185 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+{% load social_share %}
+{% load thumbnail %}
+{% block title %}{{ post.title }} | Useful Python - Wielding Python for Fun and Productivity{% endblock %}
+{% block heading %}<h1>{{ post.title }}</h1>{% endblock %}
+{% block metadesc %}
+  <meta name="description" content="{{ post.snippet }}"/>
+  {% endblock %}
+{% block style %}
+
+div.codehilite {
+    background-color: #F2F2F2;
+}
+
+div.blogcontent img,video,p {
+    max-width: 100%;
+    display: block;
+    height: auto;
+}
+div.socialshare {
+    display:inline;
+}
+{% endblock %}
+{% block contentblockdiv %}<div class="col-lg-8 col-xl-9 nodec">{% endblock %}
+{% block desc %}
+<div class="text-muted smaller">
+    <i class="fa fa-user"></i> <a href="/columnists/{{ post.authors.all.0.link }}">{{ post.authors.all.0.name }} </a>
+     &nbsp <i class="fa fa-calendar"></i> {{ post.publish_on|naturaltime }}<br>
+    </div>
+
+    <div style="text-decoration:none;display:inline;" class="socialshare">
+            <div style="width:auto;float:left;" class="mr-2">
+    {% post_to_twitter "New Post: {{ post.title }}. Check it out!" post '<i class="fa fa-twitter-square"></i>' %}
+            </div>
+            <div style="width:auto;float:left;" class="mr-2">
+                {% post_to_facebook post '<i class="fa fa-facebook-official"></i>' %}</div>
+            <div style="width:auto;float:left" class="mr-2">
+    {% post_to_linkedin post.title post '<i class="fa fa-linkedin-square"></i>' %}
+            </div>
+        <div style="width:auto;float:left;" class="mr-2">
+    {% post_to_reddit "New Post: {{ post.title }}. Check it out!" post '<i class="fa fa-reddit"></i>' %}
+            </div>
+        <div style="width:auto;" class="mr-2">
+    {% send_email post.title "New Post: {{ post.title }}. Check it out!" post '<i class="fa fa-envelope"></i>' %}
+            </div>
+</div>
+{% endblock %}
+{% block content %}
+
+<div class="blogcontent pr-lg-5 mr-lg-5 pl-lg-5 ml-lg-5 mt-2">
+    <img src="{{ post.cover|thumbnail_url:'full' }}"
+     alt="Cover image: {{ post.title }}"><br>
+    <span id="bloghtml">{{ post.content|safe }}</span>
+    <br> &nbsp;
+    {% for tag in post.tags.all %}
+    <a href="/categories/{{ tag.link }}/">
+        <span style="background-color:#FFFFaa;font-weight:bold;">{{ tag.name }}</span></a> &nbsp;
+    {% endfor %}
+</div>
+{% endblock %}
+{% block related %}
+<div class="row">
+    <div class="col-lg-12">
+        <h5>Recent Posts</h5>
+    </div>
+</div>
+<div class="row">
+    {% for sug in sugs %}
+    <div class="col-xl-4 col-sm-6 mb-3">
+          <div class="card text-white bg-primary o-hidden h-100">
+              <a href="/blog/{{ sug.link }}" style="text-decoration:none; color:white;">
+            <div class="card-body" style="background-color:#400000;">
+                {{ sug.title|truncatechars:65 }}
+            </div></a>
+            <a class="card-footer text-white clearfix small z-1" href="/blog/{{ sug.link }}">
+              <span class="float-left">Read More</span>
+              <span class="float-right">
+                <i class="fa fa-angle-right"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block comment_section %}
+<span style="font-weight:bolder;"><br></span>
+
+<!--div style="border:1px dotted grey;border-bottom:none;border-radius:1%;"-->
+<div class="panel-heading card-header">
+    <i class="fa fa-comments fa-fw"></i> Comments
+</div>
+<br>
+<div class="panel-footer">
+                            <div class="input-group">
+                                {% if logged_in %}
+                                <textarea id="btn-input" class="form-control input-sm" rows="3"
+                                          placeholder="Type your comment here..."></textarea>
+                                {% else %}
+                                <textarea id="btn-input" class="form-control input-sm" rows="3"
+                                          placeholder="You need to be logged in to comment."></textarea>
+                                {% endif %}
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-sm m-1 mt-4 mb-4" id="btn-chat">
+                                        <i class="fa fa-send"></i> &nbsp;Send&nbsp;
+                                    </button>
+                                </span>
+                            </div>
+                        </div><br>
+<div class="panel-body">
+                            <ul class="chat">
+                                {% for comment in comments %}
+                                    <li class="left clearfix">
+                                    <span class="chat-img pull-left">
+                                        <img class="d-flex mr-3 rounded-circle" src="{{ comment.author.avatar|thumbnail_url:'avatar' }}"
+                                             alt="dp: {{ comment.author.name }}" width="55" height="55">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{ comment.author.name }}</strong>
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> {{ comment.created_on|naturaltime }}
+                                            </small>
+                                        </div>
+                                        <p class="ml-3">
+                                            {{ comment.content }}
+                                        </p>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+
+<!--/div-->
+<br><br><br>
+{% endblock %}
+
+    {% block sideheaddefault %}<div class="col-lg-4 col-xl-3">{% endblock %}
+
+        {% block tweetimg %}width="35" height="35" {% endblock %}
+
+
+{% block js %}
+
+    //$('#sidenavToggler').click();
+    function refresh_comments() {
+        $.ajax({
+            url: "/blogcomments/{{ post.id }}",
+            type: "get",
+            headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+            },
+            dataType: "json",
+            success: function(data) {
+                $('ul.chat').html(data.html);
+            }});
+    }
+    $('#btn-chat').click(function() {
+        //alert('asas');
+        if ($('#btn-input').val() == '')
+            return;
+        $.ajax({
+        url: "/blogcomments/{{ post.id }}",
+        type: "post",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        data: JSON.stringify({
+            name: 'commentfield',
+            value: $('#btn-input').val(),
+            user_id: "{{ user.id }}",
+        }),
+        dataType: "json",
+        success: function(data) {
+            if (data.logged_out)
+                $('#btn-input').val('You need to be logged in to comment.');
+            else
+                $('#btn-input').val('');
+            refresh_comments();
+        }});
+    });
+
+{% endblock %}

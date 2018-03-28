@@ -1,0 +1,35 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+{% block title %}News | Useful Python - Wielding Python for Fun and Productivity{% endblock %}
+{% block heading %}<h2>News</h2>{% endblock %}
+{% block metadesc %}
+<meta name="description" content="Get the latest top news related to technology and gadgets at a single place, along with reviews and articles."
+/>
+{% endblock %}
+{% block content %}
+
+<div class="panel-body">
+                            <ul class="chat">
+                                {% for post in all_news %}
+                                    <li class="left clearfix">
+                                        <a href="{{ post.link }}" target="_blank">
+                                    <span class="chat-img pull-left">
+                                        <img class="d-flex mr-3 rounded-circle" src="{{ post.pic.url }}"
+                                             alt="" width="50" height="50">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <!--strong class="primary-font">{{ post.source_name }}</strong-->
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> Updated {{ post.posted_on|naturaltime }}
+                                            </small>
+                                        </div>
+                                        <p class="ml-3">
+                                            {{ post.content }}
+                                        </p>
+                                    </div></a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+{% endblock %}

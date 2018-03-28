@@ -1,0 +1,67 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+{% load thumbnail %}
+{% block title %}Archive | Useful Python - Wielding Python for Fun and Productivity{% endblock %}
+{% block heading %}<h2>Posts by {{ writer_.name }}</h2>{% endblock %}
+{% block content %}
+
+<div class="panel-body">
+                            <ul class="chat">
+                                <div class="p-3 m-5 row" style="background-color:#ddddff;overflow:hidden;">
+                                        <span class="chat-img pull-left ">
+                                        <img class="d-flex mr-3 rounded-circle"
+                                             src="{{ writer_.avatar|thumbnail_url:'avatar' }}"
+                                             alt="" width="100" height="100">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <span style="font-size:130%;color:black;">
+                                                <strong class="primary-font">{{ writer_.name }}</strong>
+                                            </span>
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> Last posted
+                                                {{ last_date|naturaltime }}
+                                            </small>
+                                        </div>
+                                        <p class="" style="font-size:110%;font-weight:bold;">
+                                            <span style="font-size:90%;font-weight:lighter;">{{ writer_.bio }}</span> <br>
+                                            {% if writer_.twitter_link %}
+                                            <a href="https://twitter.com/{{ writer_.twitter_link }}"><i class="fa fa-twitter"></i></a>
+                                            &nbsp
+                                            {% endif %}
+                                            {% if writer_.public_email %}
+                                            <a href="mailto:{{ writer_.public_email }}"><i class="fa fa-envelope"></i>
+                                                &nbsp
+                                                {% endif %}
+                                                {% if writer_.quora_link %}
+                                            <a href="https://www.quora.com/profile/{{ writer_.quora_link }}"> <i class="fa fa-quora"></i></a>
+                                                {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                {% for post in posts %}
+                                    <li class="left clearfix">
+                                        <a href="/blog/{{ post.link }}">
+                                    <span class="chat-img pull-left">
+                                        <img class="d-flex mr-3 rounded-circle" src="{{ post.cover.url }}"
+                                             alt="" width="120" height="120">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{ post.title }}</strong>
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> {{ post.publish_on|naturaltime }}
+                                            </small>
+                                        </div>
+                                        <p class="ml-3">
+                                            {{ post.snippet }}<br>
+                                            {% for tag in post.tags.all %}
+                                            <a href="/categories/{{ tag.link }}">#{{ tag.name }} &nbsp;</a>
+                                            {% endfor %}
+                                        </p>
+                                    </div></a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+{% endblock %}

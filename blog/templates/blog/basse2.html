@@ -1,0 +1,501 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>TechKnack.in - {% block title %}Home{% endblock %}</title>
+  <!-- Bootstrap core CSS-->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <!-- Page level plugin CSS-->
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav"
+       style="background-color:#000000;">
+    <a class="navbar-brand" href="/" style="color:#ffffff;">
+      <img src="{% static 'mainlogo.jpeg' %}" height="30"> &nbsp TechKnack</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion"
+      style="background-color:#00254A;">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+          <a class="nav-link" href="/" style="color:white">
+            <i class="fa fa-fw fa-home"></i>
+            <span class="nav-link-text">Home</span>
+          </a>
+        </li>
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Blog">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
+             href="#collapseMulti" data-parent="#exampleAccordion" style="color:white">
+            <i class="fa fa-fw fa-book"></i>
+            <span class="nav-link-text">Blog</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="collapseMulti"
+              style="background-color:#faaaaa">
+            <li>
+              <a href="/blog/">All</a>
+            </li>
+            {% for blog_cat in blog_cats %}
+            <li>
+              <a href="/categories/{{ blog_cat.link }}">{{ blog_cat.name }}</a>
+            </li>
+            {% endfor %}
+            <li>
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti2">Columnists</a>
+              <ul class="sidenav-third-level collapse" id="collapseMulti2"
+                  style="background-color:#aa5555">
+                {% for writer in writers %}
+                <li>
+                  <a href="/columnists/{{ writer.link }}" style="color:white">{{ writer.name }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Events">
+          <a class="nav-link" href="/events/" style="color:white;">
+            <i class="fa fa-fw fa-calendar"></i>
+            <span class="nav-link-text">Events</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tweets">
+          <a class="nav-link" href="/tweets/" style="color:white;">
+            <i class="fa fa-fw fa-twitter"></i>
+            <span class="nav-link-text">Tweets</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="News">
+          <a class="nav-link" href="/news/" style="color:white;">
+            <i class="fa fa-fw fa-newspaper-o"></i>
+            <span class="nav-link-text">News</span>
+          </a>
+        </li>
+        {% if not logged_in %}
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Account">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents"
+             data-parent="#exampleAccordion" style="color:white;">
+            <i class="fa fa-fw fa-user"></i>
+            <span class="nav-link-text">Log In/Sign Up</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="collapseComponents"
+              style="background-color:#ffcccc">
+            <li>
+              <a href="/login/">Log In</a>
+            </li>
+            <li>
+              <a href="/signup/">Sign Up</a>
+            </li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Account">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents"
+             data-parent="#exampleAccordion" style="color:white;">
+            <i class="fa fa-fw fa-user"></i>
+            <span class="nav-link-text">Account</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="collapseComponents"
+          style="background-color:#ffcccc">
+            <li>
+              <a href="/account/">Settings</a>
+            </li>
+            <li>
+              <a href="/logout/">Sign Out</a>
+            </li>
+          </ul>
+        </li>
+        {% endif %}
+
+      </ul>
+      <ul class="navbar-nav sidenav-toggler">
+        <li class="nav-item">
+          <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        {% if logged_in %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown"
+             href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-fw fa-bell"></i>
+            <span class="d-lg-none">
+              Notifications
+            </span>
+            <span class="indicator text-warning d-none d-lg-block">
+              {% if notification %}
+              <i class="fa fa-fw fa-circle"></i>
+              {% endif %}
+            </span>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+            {% if not notifs %}
+            <span class="dropdown-message small">
+                <strong>
+                  No notifications</strong>
+              </span>
+            {% endif %}
+            {% for notif in notifs %}
+            <a class="dropdown-item" href="#">
+              <span class="text-success">
+                <strong>
+                  <i class="fa fa-long-arrow-up fa-fw"></i>{{ notif.detail }}</strong>
+              </span>
+              <span class="small float-right text-muted">{{ notif.get_time }}</span>
+              <div class="dropdown-message small">{{ notif.description }}</div>
+            </a>
+            {% endfor %}
+
+          </div>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-fw fa-bell"></i>
+            <span class="d-lg-none">
+              Notifications
+            </span>
+            <span class="indicator text-warning d-none d-lg-block">
+              {% if notification %}
+              <i class="fa fa-fw fa-circle"></i>
+              {% endif %}
+            </span>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+
+            <a class="dropdown-item" href="/login/">
+              <span class="text-success">
+
+                  You are not logged in
+              </span>
+            </a>
+
+          </div>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <form class="form-inline my-2 my-lg-0 mr-lg-2">
+            <div class="input-group">
+              <form action="/search/" method="get">
+              <input class="form-control" type="text" placeholder="Search for..."
+                     name="searchquery" id="searchInput">
+              <span class="input-group-btn">
+                <button class="btn btn-info" type="submit" id="searchBtn"
+                        onclick="searchclick()">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+              </form>
+            </div>
+          </form>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+
+      <!-- Icon Cards-->
+
+      <!-- Area Chart Example-->
+
+      <div class="row">
+        <div class="col-lg-9">
+
+          <div class="mb-0 mt-4" style="font-size:150%;font-weight:bold;">
+            {% block heading %}{% endblock %} </div>
+          <hr class="mt-2">
+          {% block desc %}{% endblock %}
+          <div class="card mb-3 pr-1 pl-1" style="border:none;">
+            {% block content %}{% endblock %}
+          </div>
+          <br>{% block related %}{% endblock %}
+          <br>
+          {% block comment_section %}{% endblock %}
+        </div>
+
+        {% block sidehead %}<div class="col-lg-3">{% endblock %}
+          <!-- Example Pie Chart Card-->
+          <div class="card mb-3">
+            <div class="card-header" style="background-color:#000000;color:white;">
+              <i class="fa fa-twitter"></i> Tweets </div>
+            <div class="list-group list-group-flush small">
+              {% for tweet in tweets %}
+              <a class="list-group-item list-group-item-action"
+                 style="background-color:#00254A;color:white;"
+                 href="{{ tweet.link }}" target="_blank">
+                <div class="media">
+                  <img class="d-flex mr-3 rounded-circle" src="{{ tweet.author_pic.url }}" width="45" height="45" alt="">
+                  <div class="media-body">
+                    <strong>{{ tweet.author }}</strong> {{ tweet.content }}
+                    <strong></strong>
+                    <div class="text-muted smaller">{{ tweet.posted_on|naturaltime }}</div>
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+
+              <a class="list-group-item list-group-item-action" href="/tweets/">View all tweets...</a>
+            </div>
+
+          </div>
+          <div class="card mb-3">
+            <div class="card-header" style="background-color:#000000;color:white;">
+              <i class="fa fa-newspaper-o"></i> News</div>
+
+            <div class="list-group list-group-flush small">
+              {% for new in news %}
+              <a class="list-group-item list-group-item-action" href="{{ new.link }}"
+              style="background-color:#00254A;color:white;">
+                <div class="media">
+                  <div class="media-body">
+                    <span style="font-weight:bold;">{{ new.content }}</span>
+                    <div class="text-muted smaller">{{ new.posted_on|naturaltime }}</div>
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+
+
+              <a class="list-group-item list-group-item-action" href="/news/">View all news...</a>
+            </div>
+
+
+          </div>
+          <!-- Example Notifications Card-->
+          <div class="card mb-3">
+            <div class="card-header" style="background-color:#000000;color:white;">
+              <i class="fa fa-book"></i> Popular Posts</div>
+            <div class="list-group list-group-flush small">
+              {% for pop in pop_posts %}
+              <a class="list-group-item list-group-item-action" href="/blog/{{ pop.link }}"
+              style="background-color:#00254A;color:white;">
+                <div class="media">
+                  <img class="d-flex mr-3 rounded-circle" src="{{ pop.cover.url }}" width="45" height="45" alt="">
+                  <div class="media-body">
+                    <strong>{{ pop.title }}</strong>
+                    <div class="text-muted smaller">{{ pop.get_post_time }}</div>
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+              <a class="list-group-item list-group-item-action" href="/blog/">View all posts...</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Example DataTables Card-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Stock Prices</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td>Tiger Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                </tr>
+                <tr>
+                  <td>Garrett Winters</td>
+                  <td>Accountant</td>
+                  <td>Tokyo</td>
+                  <td>63</td>
+                  <td>2011/07/25</td>
+                  <td>$170,750</td>
+                </tr>
+                <tr>
+                  <td>Ashton Cox</td>
+                  <td>Junior Technical Author</td>
+                  <td>San Francisco</td>
+                  <td>66</td>
+                  <td>2009/01/12</td>
+                  <td>$86,000</td>
+                </tr>
+                <tr>
+                  <td>Cedric Kelly</td>
+                  <td>Senior Javascript Developer</td>
+                  <td>Edinburgh</td>
+                  <td>22</td>
+                  <td>2012/03/29</td>
+                  <td>$433,060</td>
+                </tr>
+
+
+                <tr>
+                  <td>Michelle House</td>
+                  <td>Integration Specialist</td>
+                  <td>Sidney</td>
+                  <td>37</td>
+                  <td>2011/06/02</td>
+                  <td>$95,400</td>
+                </tr>
+                <tr>
+                  <td>Suki Burks</td>
+                  <td>Developer</td>
+                  <td>London</td>
+                  <td>53</td>
+                  <td>2009/10/22</td>
+                  <td>$114,500</td>
+                </tr>
+                <tr>
+                  <td>Prescott Bartlett</td>
+                  <td>Technical Author</td>
+                  <td>London</td>
+                  <td>27</td>
+                  <td>2011/05/07</td>
+                  <td>$145,000</td>
+                </tr>
+                <tr>
+                  <td>Gavin Cortez</td>
+                  <td>Team Leader</td>
+                  <td>San Francisco</td>
+                  <td>22</td>
+                  <td>2008/10/26</td>
+                  <td>$235,500</td>
+                </tr>
+
+                <tr>
+                  <td>Thor Walton</td>
+                  <td>Developer</td>
+                  <td>New York</td>
+                  <td>61</td>
+                  <td>2013/08/11</td>
+                  <td>$98,540</td>
+                </tr>
+
+                <tr>
+                  <td>Jonas Alexander</td>
+                  <td>Developer</td>
+                  <td>San Francisco</td>
+                  <td>30</td>
+                  <td>2010/07/14</td>
+                  <td>$86,500</td>
+                </tr>
+                <tr>
+                  <td>Shad Decker</td>
+                  <td>Regional Director</td>
+                  <td>Edinburgh</td>
+                  <td>51</td>
+                  <td>2008/11/13</td>
+                  <td>$183,000</td>
+                </tr>
+                <tr>
+                  <td>Michael Bruce</td>
+                  <td>Javascript Developer</td>
+                  <td>Singapore</td>
+                  <td>29</td>
+                  <td>2011/06/27</td>
+                  <td>$183,000</td>
+                </tr>
+                <tr>
+                  <td>Donna Snider</td>
+                  <td>Customer Support</td>
+                  <td>New York</td>
+                  <td>27</td>
+                  <td>2011/01/25</td>
+                  <td>$112,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+      </div>
+    </div>
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © Your Website 2017</small>
+        </div>
+      </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+    <!-- Page level plugin JavaScript-->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.js' %}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin.min.js' %}"></script>
+    <!-- Custom scripts for this page-->
+    <script src="{% static 'js/sb-admin-datatables.min.js' %}"></script>
+    <script src="{% static 'js/sb-admin-charts.min.js' %}"></script>
+  </div>
+  <script>
+    {% block js %}{% endblock %}
+  </script>
+</body>
+
+</html>

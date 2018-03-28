@@ -1,0 +1,36 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+{% block title %} Discussions | Useful Python - Wielding Python for Fun and Productivity{% endblock %}
+{% block heading %}<h2>Discussions</h2>{% endblock %}
+{% block metadesc %}
+<meta name="description" content="Get the latest and popular tweets related to the tech world, along with news, upcoming events, and blog posts all at one place."
+/>
+{% endblock %}
+{% block content %}
+
+<div class="panel-body">
+                            <ul class="chat">
+                                {% for post in all_tweets %}
+                                    <li class="left clearfix">
+                                        <a href="{{ post.link }}" target="_blank">
+                                    <span class="chat-img pull-left">
+                                        <img class="d-flex mr-3 rounded-circle" src="{{ post.author_pic }}"
+                                             alt="" width="50" height="50">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{ post.author }}</strong>
+                                            <span style="color:grey"> @{{ post.author_handle }}</span>
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> {{ post.posted_on|naturaltime }}
+                                            </small>
+                                        </div>
+                                        <p class="ml-3">
+                                            {{ post.content }}
+                                        </p>
+                                    </div></a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+{% endblock %}

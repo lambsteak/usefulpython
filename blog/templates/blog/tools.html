@@ -1,0 +1,36 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+{% block title %}Codebase | Useful Python - Wielding Python for Fun and Productivity{% endblock %}
+{% block heading %}<h2>Codebase</h2>{% endblock %}
+{% block metadesc %}
+<meta name="description" content="A list of major upcoming events relevant to the world of technology"
+/>
+{% endblock %}
+{% block content %}
+
+<div class="panel-body">
+                            <ul class="chat">
+                                {% for post in events %}
+                                    <li class="left clearfix">
+                                        <a href="{{ post.link }}">
+                                    <span class="chat-img pull-left">
+                                        <img class="d-flex mr-3 rounded-circle" src="{{ post.pic.url }}"
+                                             alt="" width="60" height="60">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{ post.subject }}</strong>
+                                            <!--small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> {{ post.event_time }}
+                                            </small-->
+                                        </div>
+                                        <p class="ml-3">
+                                            {{ post.location|default_if_none:"" }}
+                                            {{ post.content|default_if_none:"" }}
+                                        </p>
+                                    </div></a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "blog/base.html" %}
+{% load thumbnail %}
+{% block title %}About | Useful Python - Wielding Python for Fun and Productivity {% endblock %}
+{% block style %}
+#content_div {
+    background-color: #ffffFF;
+}
+{% endblock %}
+{% block heading %}<h2>About</h2>{% endblock %}
+{% block content %}
+<div>
+{{ site.about|safe }}
+</div>
+<br>
+<div>
+    <img src="{{ dev.avatar|thumbnail_url:'avatar' }}" width="60" height="60" style="border-radius:25%;"><br>
+    <span style="font-family: Helvetica;font-weight:bolder;">{{ dev.name }}</span>
+{{ dev.bio }}
+    <br>
+    <a href="https://github.com/lambsteak">
+              <i class="fa fa-github"></i></a>
+    &nbsp; <a href="https://www.linkedin.com/in/prabhakarparam/">
+            <i class="fa fa-linkedin-square"></i>
+    {% if dev.twitter_link %}&nbsp
+    <a href="https://twitter.com/{{ dev.twitter_link }}"><i class="fa fa-envelope"></i></a>
+{% endif %}
+    {% if dev.public_email %}&nbsp
+<a href="mailto:{{ dev.public_email }}"><i class="fa fa-envelope"></i></a>
+{% endif %}
+</div>
+{% endblock %}

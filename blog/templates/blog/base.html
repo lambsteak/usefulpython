@@ -1,0 +1,27 @@
+{% extends "blog/index.html" %}
+{% block metadesc %}{% endblock %}
+{% block style %}
+a:link {
+    text-decoration: none;
+}
+{% endblock %}
+{% block pagebody %}
+{% block contentblockdiv %}<div class="col-lg-9 col-xl-9 nodec">{% endblock %}
+
+          <div class="mb-0 mt-4" style="font-size:150%;font-weight:bold;">
+            {% block heading %}{% endblock %} </div>
+          <hr class="mt-2">
+          {% block desc %}{% endblock %}
+          <div class="card mb-3 pr-1 pl-1" style="border:none;" id="content_div">
+            {% block content %}{% endblock %}
+          </div>
+          <br>{% block related %}{% endblock %}
+          <br>
+          {% block comment_section %}{% endblock %}
+        </div>
+{% endblock %}
+{% block sidehead %}
+{% block sideheaddefault %}
+<div class="col-lg-3 col-xl-3">
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,687 @@
+{% load static %}
+{% load humanize %}
+{% load thumbnail %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {% block metadesc %}
+  <meta name="description" content="Learn about handy libraries and frameworks to automate your tasks and do powerful and amazing stuffs. Also find ready-made apps available to start using right away."/>
+  {% endblock %}
+  <title>{% block title %}Useful Python - Wielding Python for Fun and Productivity {% endblock %}</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/static/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+
+  <script defer src="/static/vendor/fa-v4-shim.js"></script>
+  <script defer src="/static/vendor/fontawesome-all.js"></script>
+  <script defer src="/static/vendor/fa-brands.js"></script>
+  <script defer src="/static/vendor/fa-regular.js"></script>
+  <!-- Bootstrap core CSS-->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <!-- Page level plugin CSS-->
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'codehilite.css' %}">
+
+  <style>
+  {% block style %}{% endblock %}
+  </style>
+</head>
+
+<body class="fixed-nav sticky-footer bg-light" id="page-top">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav"
+       style="background-color:#114660;">
+      <a href="/" style="text-decoration:none"><img src="{% static 'greensnake.png' %}" height="40"
+      alt="Logo of Useful Python"></a><!--#CDEFCD  #EDFF8D-->
+  <a class="navbar-brand" href="/" style="color:#bdffda; font-weight: bold">
+    &nbsp;&nbsp;Useful Python</a>
+      <!--img src="{% static 'typelogo12.jpg' %}" height="35" alt="Useful Python"-->
+    <!--/a-->
+    <button class="navbar-toggler navbar-toggler-right" type="button"
+            data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false"
+            aria-label="Toggle navigation" style="background-color:white;">
+      <span class="navbar-toggler-icon" style="color:white;"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion"
+      style="background-color:#F8F8F8;">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+          <a class="nav-link" href="/" style="color:black">
+            <i class="fa fa-fw fa-home"></i>
+            <span class="nav-link-text">Home</span>
+          </a>
+        </li>
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Blog">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
+             href="#collapseMulti" data-parent="#exampleAccordion" style="color:black">
+            <i class="fa fa-fw fa-book"></i>
+            <span class="nav-link-text">Blog</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="collapseMulti"
+              style="background-color:#fefeff">
+            <li>
+              <a href="/blog/">All</a>
+            </li>
+            {% for blog_cat in blog_cats %}
+            <li>
+              <a href="/categories/{{ blog_cat.link }}"><i>{{ blog_cat.name }}</i></a>
+            </li>
+            {% endfor %}
+
+
+
+            <!--li>
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti2">Archive</a>
+              <ul class="sidenav-third-level collapse" id="collapseMulti2"
+                  style="background-color:#efefea">
+                {% for writer in writers %}
+                <li>
+                  <a href="/columnists/{{ writer.link }}" style="color:black">{{ writer.name }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li-->
+          </ul>
+        </li>
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Codebase">
+          <a class="nav-link" href="/tools/" style="color:black;">
+            <i class="fa fa-fw fa-box"></i>
+            <span class="nav-link-text">Codebase</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Discussions">
+          <a class="nav-link" href="/discussions/" style="color:black;">
+            <i class="fa fa-fw fa-comment"></i>
+            <span class="nav-link-text">Discussions</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="News">
+          <a class="nav-link" href="/news/" style="color:black;">
+            <i class="fa fa-fw fa-newspaper"></i>
+            <span class="nav-link-text">News</span>
+          </a>
+        </li>
+        {% if not logged_in %}
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Account">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents"
+             data-parent="#exampleAccordion" style="color:black;">
+            <i class="fa fa-fw fa-user"></i>
+            <span class="nav-link-text">You're not logged in</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="collapseComponents"
+              style="background-color:#fefeff">
+            <li>
+              <a id="google_login" href="/accounts/google/login"><i class="fab fa-google"></i>
+Continue with Google</a>
+            </li>
+            <li>
+              <a id="twitter_login" href="/accounts/twitter/login"><i class="fab fa-twitter"></i>
+Continue with Twitter</a>
+            </li>
+            <li>
+              <a id="fb_login" href="/accounts/facebook/login"><i class="fab fa-facebook-f"></i>
+Continue with Facebook</a>
+            </li>
+            <li>
+              <a href="/signup/"><i class="fa fa-user-plus"></i> Sign Up</a>
+            </li>
+            <li>
+              <a href="/login/"><i class="fa fa-sign-in-alt"></i> Log In</a>
+            </li>
+          </ul>
+          <script>
+
+function post(path, params, method) {
+method = method || "post"; // Set method to post by default if not specified.
+
+// The rest of this code assumes you are not using a library.
+// It can be made less wordy if you use one.
+var form = document.createElement("form");
+form.setAttribute("method", method);
+form.setAttribute("action", path);
+
+for(var key in params) {
+if(params.hasOwnProperty(key)) {
+var hiddenField = document.createElement("input");
+hiddenField.setAttribute("type", "hidden");
+hiddenField.setAttribute("name", key);
+hiddenField.setAttribute("value", params[key]);
+
+form.appendChild(hiddenField);
+}
+}
+var hiddenField = document.createElement("input");
+hiddenField.setAttribute("type", "hidden");
+hiddenField.setAttribute("name", "csrfmiddlewaretoken");
+hiddenField.setAttribute("value", "{{ csrf_token }}");
+form.appendChild(hiddenField);
+
+document.body.appendChild(form);
+form.submit();
+}
+
+
+function goog() {
+window.event.preventDefault();
+// alert('12');
+post('/accounts/google/login/');
+}
+function twit() {
+window.event.preventDefault();
+post('/accounts/twitter/login/');
+}
+function fb() {
+window.event.preventDefault();
+post('/accounts/facebook/login/');
+}
+
+gg = document.querySelector('#google_login');
+gg.addEventListener('click', goog, true);
+gg = document.querySelector('#twitter_login');
+gg.addEventListener('click', twit, true);
+gg = document.querySelector('#fb_login');
+gg.addEventListener('click', fb, true);
+</script>
+        </li>
+        {% else %}
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Account">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents"
+             data-parent="#exampleAccordion" style="color:black;">
+            <i class="fa fa-fw fa-user"></i>
+            <span class="nav-link-text">{{ user.profile.name }}</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="collapseComponents"
+          style="background-color:#fefeff">
+            <li>
+              <a href="/account/"><i class="fa fa-cog"></i> Settings</a>
+            </li>
+            <li>
+              <a id="logout_oauth" href="/accounts/logout"><i class="fa fa-sign-out-alt"></i> Log Out</a>
+              <script>
+function post(path, params, method) {
+method = method || "post"; // Set method to post by default if not specified.
+
+// The rest of this code assumes you are not using a library.
+// It can be made less wordy if you use one.
+var form = document.createElement("form");
+form.setAttribute("method", method);
+form.setAttribute("action", path);
+
+for(var key in params) {
+if(params.hasOwnProperty(key)) {
+var hiddenField = document.createElement("input");
+hiddenField.setAttribute("type", "hidden");
+hiddenField.setAttribute("name", key);
+hiddenField.setAttribute("value", params[key]);
+
+form.appendChild(hiddenField);
+}
+}
+var hiddenField = document.createElement("input");
+hiddenField.setAttribute("type", "hidden");
+hiddenField.setAttribute("name", "csrfmiddlewaretoken");
+hiddenField.setAttribute("value", "{{ csrf_token }}");
+form.appendChild(hiddenField);
+
+document.body.appendChild(form);
+form.submit();
+}
+
+
+function lgout() {
+window.event.preventDefault();
+post('/accounts/logout/');
+}
+gg = document.querySelector('#logout_oauth');
+gg.addEventListener('click', lgout, true);
+</script>
+            </li>
+          </ul>
+        </li>
+        {% endif %}
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="About">
+          <a class="nav-link" href="/about/" style="color:black;">
+            <i class="fa fa-fw fa-info-circle"></i>
+            <span class="nav-link-text">About</span>
+          </a>
+        </li>
+
+      </ul>
+      <ul class="navbar-nav sidenav-toggler" style="background-color:#F8F8F8">
+        <li class="nav-item">
+          <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <form class="form-inline my-2 my-lg-0 mr-lg-2">
+            <div class="input-group">
+
+              <span class="input-group-btn">
+
+                <a href="https://www.reddit.com/r/UsefulPython/"
+                   class="btn btn-info" type="submit" target="_blank"
+                style="text-decoration:none;">
+                  <i class="fab fa-reddit-alien"></i>
+                </a>
+
+              </span> &nbsp;&nbsp;
+
+              <span class="input-group-btn">
+
+                <a href="https://discord.gg/EZ9zNDZ"
+                   class="btn btn-info" type="submit" target="_blank"
+                style="text-decoration:none;">
+                  <i class="fab fa-discord"></i>
+                </a>
+
+              </span> &nbsp;&nbsp;
+
+              <span class="input-group-btn">
+
+                <a href="https://twitter.com/param_prabhakar"
+                   class="btn btn-info" type="submit" target="_blank"
+                style="text-decoration:none;">
+                  <i class="fab fa-twitter"></i>
+                </a>
+
+              </span> &nbsp;&nbsp;
+
+              <span class="input-group-btn">
+
+                <a href="https://github.com/lambsteak/usefulpython"
+                   class="btn btn-info" type="submit" target="_blank"
+                style="text-decoration:none;">
+                  <i class="fab fa-github"></i>
+                </a>
+
+              </span> &nbsp;&nbsp;
+
+              <span class="input-group-btn">
+                <a href="https://www.facebook.com/usefulpython/"
+                   class="btn btn-info" type="submit" target="_blank"
+                style="text-decoration:none;outline:0;">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+              </span>
+            </div>
+          </form>
+        </li>
+        <!--li class="nav-item">
+          <form class="form-inline my-2 my-lg-0 mr-lg-2">
+            <div class="input-group">
+
+              <span class="input-group-btn">
+                <a href="https://www.facebook.com/techknack.in/"
+                   class="btn btn-info" type="submit" target="_blank">
+                  <i class="fa fa-facebook"></i>
+                </a>
+              </span>
+
+            </div>
+          </form>
+        </li-->
+        {% if logged_in %}
+        <!--li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown"
+             href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          style="color:white;">
+            <i class="fa fa-fw fa-bell"></i>
+            <span class="d-lg-none">
+              Notifications
+            </span>
+            <span class="indicator text-warning d-none d-lg-block">
+              {% if notification %}
+              <i class="fa fa-fw fa-circle"></i>
+              {% endif %}
+            </span>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+            {% if not notifs %}
+            <span class="dropdown-message small">
+                <strong>
+                  No notifications</strong>
+              </span>
+            {% endif %}
+            {% for notif in notifs %}
+            <a class="dropdown-item" href="#">
+              <span class="text-success">
+                <strong>
+                  <i class="fa fa-long-arrow-up fa-fw"></i>{{ notif.detail }}</strong>
+              </span>
+              <span class="small float-right text-muted">{{ notif.get_time }}</span>
+              <div class="dropdown-message small">{{ notif.description }}</div>
+            </a>
+            {% endfor %}
+
+          </div>
+        </li-->
+        {% else %}
+        <!--li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          style="color:white;">
+            <i class="fa fa-fw fa-bell"></i>
+            <span class="d-lg-none">
+              Notifications
+            </span>
+            <span class="indicator text-warning d-none d-lg-block">
+              {% if notification %}
+              <i class="fa fa-fw fa-circle"></i>
+              {% endif %}
+            </span>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+
+            <a class="dropdown-item" href="/login/">
+              <span class="text-success">
+
+                  You are not logged in
+              </span>
+            </a>
+
+          </div>
+        </li-->
+        {% endif %}
+        <li class="nav-item">
+          <form class="form-inline my-2 my-lg-0 mr-lg-2">
+            <div class="input-group">
+              <form action="/search/" method="get">
+              <input class="form-control" type="text" placeholder="Search for..."
+                     name="searchquery" id="searchInput">
+              <span class="input-group-btn">
+                <button class="btn btn-info" type="submit" id="searchBtn"
+                        onclick="searchclick()">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+              </form>
+            </div>
+          </form>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+  <div class="content-wrapper" style="background-color:#ffffff">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+
+      <!-- Icon Cards-->
+
+      <!-- Area Chart Example-->
+
+      <div class="row">
+        {% block pagebody %}
+        <div class="col-lg-9">
+          <!--div class="card mb-3">
+            <img src="{% static 'pexels.jpeg' %}" height="200">
+          </div-->
+          <!-- Example Bar Chart Card-->
+          <!--div class="card mb-3" style="border:2px inset lightblue;border:none;">
+            <img src="{% static 'techknack_logo.jpg' %}">
+          </div-->
+
+
+
+
+          <!-- Card Columns Example Social Feed-->
+          <div class="mb-0 mt-1 p-0"
+               style="color:;font-weight:bold;font-size:140%;text-align:center;">
+            <span style="color:darkblue;">
+              &nbsp <i class="fa fa-pencil-alt"></i>
+            Recent Posts &nbsp </span> </div>
+          <hr class="mt-2" style="color:black;">
+          <div class="card-columns">
+            <!-- Example Social Card-->
+            {% for post in posts %}
+            <div class="card mb-3" style="background-color:#fafaff;color:black;">
+              <a href="/blog/{{ post.link }}">
+                <img class="card-img-top img-fluid w-100" src="{{ post.cover|thumbnail_url:'preview' }}"
+                     alt="Cover image: {{ post.title }}">
+              </a>
+              <div class="card-body">
+                <h6 class="card-title mb-1"><a href="/blog/{{ post.link }}">{{ post.title }}</a></h6>
+                <p class="card-text small">{{ post.snippet }}
+                  <br>
+                  <a class="mr-3 d-inline-block" href="/blog/{{ post.link }}">
+                  <i class="fa fa-fw fa-envelope-open"></i> Read More</a>
+                  {% for tag in post.tags.all %}
+                  <a href="/categories/{{ tag.link }}"> #{{ tag.name }} </a>
+                  {% endfor %}
+                </p>
+              </div>
+              <!--hr class="my-0"-->
+              <div class="card-body py-2 small">
+                <a class="mr-3 d-inline-block" href="/columnists/{{ post.authors.all.0.link }}">
+                  <i class="fa fa-fw fa-user"></i>{{ post.authors.all.0.name }}</a>
+
+
+                <!-- TODO LATER
+                <a class="mr-3 d-inline-block" href="#">
+                  <i class="fa fa-fw fa-hourglass-1"></i>Read Later</a>
+                <a class="d-inline-block" href="#">
+                  <i class="fa fa-fw fa-share"></i>Share</a>
+                  -->
+              </div>
+              <div class="card-footer small text-muted">Posted {{ post.publish_on|naturaltime }}</div>
+            </div>
+            {% endfor %}
+
+
+
+
+          </div>
+          <div class="text-muted" align="center"><a href="/blog/">More Blog Posts..</a><br><br></div>
+
+          <!--div class="card mb-3">
+
+          </div-->
+          <!-- /Card Columns-->
+        </div>
+        {% endblock %}
+        {% block sidehead %}<div class="col-lg-3">{% endblock %}
+          <!-- Example Pie Chart Card-->
+          <div class="card mb-3">
+            <div class="card-header" style="background-color:#497E98;color:white;">
+              <i class="fa fa-comment"></i> Discussions </div>
+            <div class="list-group list-group-flush small">
+              {% for tweet in tweets %}
+              <a class="list-group-item list-group-item-action"
+                 style="background-color:#F8F8F8;color:black;"
+                 href="{{ tweet.link }}" target="_blank">
+                <div class="media">
+                  <img class="d-flex mr-3 rounded-circle" src="{{ tweet.author_pic }}"
+                       {% block tweetimg %}width="45" height="45" {% endblock %}
+                       alt="Twitter profile picture of: {{ tweet.author }}">
+                  <div class="media-body">
+                    <strong>{{ tweet.author }}</strong><span style="color:grey">
+                    @{{ tweet.author_handle }}</span><br>
+                    {{ tweet.content }}
+                    <strong></strong>
+                    <div class="text-muted smaller">{{ tweet.posted_on|naturaltime }}</div>
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+
+              <a class="list-group-item list-group-item-action" href="/discussions/">View all discussions</a>
+            </div>
+
+          </div>
+          <div class="card mb-3">
+            <div class="card-header" style="background-color:#497E98;color:white;">
+              <i class="fa fa-newspaper"></i> News</div>
+
+            <div class="list-group list-group-flush small">
+              {% for new in news %}
+              <a class="list-group-item list-group-item-action" href="{{ new.link }}"
+              style="background-color:#F8F8F8;color:black;" target="_blank">
+                <div class="media">
+                  <div class="media-body">
+                    <span style="font-weight:bold;">{{ new.content }}</span>
+                    <div class="text-muted smaller"></div>
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+
+
+              <a class="list-group-item list-group-item-action" href="/news/">View all news...</a>
+            </div>
+
+
+          </div>
+          <!-- Example Notifications Card-->
+          <div class="card mb-3">
+            <div class="card-header" style="background-color:#497E98;color:white;">
+              <i class="fa fa-book"></i> Popular Posts</div>
+            <div class="list-group list-group-flush small">
+              {% for pop in pop_posts %}
+              <a class="list-group-item list-group-item-action" href="/blog/{{ pop.link }}"
+              style="background-color:#F8F8F8;color:black;">
+                <div class="media">
+                  <img class="d-flex mr-3 rounded-circle" src="{{ pop.cover|thumbnail_url:'avatar' }}"
+                       width="45" height="45" alt="Cover image: {{ pop.title }}">
+                  <div class="media-body">
+                    <strong>{{ pop.title }}</strong>
+                    <div class="text-muted smaller">{{ pop.publish_on|naturaltime }}</div>
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+              <a class="list-group-item list-group-item-action" href="/blog/">View all posts...</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Example DataTables Card-->
+      <!--div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Stock Prices</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td>Tiger Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                </tr>
+                <tr>
+                  <td>Michael Bruce</td>
+                  <td>Javascript Developer</td>
+                  <td>Singapore</td>
+                  <td>29</td>
+                  <td>2011/06/27</td>
+                  <td>$183,000</td>
+                </tr>
+                <tr>
+                  <td>Donna Snider</td>
+                  <td>Customer Support</td>
+                  <td>New York</td>
+                  <td>27</td>
+                  <td>2011/01/25</td>
+                  <td>$112,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+      </div-->
+    </div>
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small><a href="/privacypolicy/">Privacy Policy</a> |
+          <a href="/termsofservice/">Terms of Service</a> </small>
+          <!--
+            <a href="https://github.com/lambsteak" style="color:black;">
+              <i class="fa fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/prabhakarparam/" style="color:black;">
+            <i class="fa fa-linkedin-square"></i>
+            </a>
+            <a href="mailto:prabhakarparam@gmail.com" style="color:black;">
+            <i class="fa fa-envelope-square"></i>
+            </a>
+            -->
+        </div>
+      </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+    <!-- Page level plugin JavaScript-->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.js' %}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin.min.js' %}"></script>
+    <!-- Custom scripts for this page-->
+    <script src="{% static 'js/sb-admin-datatables.min.js' %}"></script>
+    <script src="{% static 'js/sb-admin-charts.min.js' %}"></script>
+    <script>
+      function searchclick() {
+        window.location = "/search?searchquery" + $('#searchInput').val();
+      }
+      {% block js %}{% endblock %}
+    </script>
+  </div>
+</body>
+
+</html>
+

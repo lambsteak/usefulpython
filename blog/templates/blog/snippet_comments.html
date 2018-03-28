@@ -1,0 +1,21 @@
+{% load humanize %}
+{% load thumbnail %}
+                                {% for comment in comments %}
+                                    <li class="left clearfix">
+                                    <span class="chat-img pull-left">
+                                        <img class="d-flex mr-3 rounded-circle" src="{{ comment.author.avatar|thumbnail_url:'avatar' }}"
+                                             alt="dp: {{ comment.author.name }}" width="55" height="55">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{ comment.author.name }}</strong>
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> {{ comment.created_on|naturaltime }}
+                                            </small>
+                                        </div>
+                                        <p class="ml-3">
+                                            {{ comment.content }}
+                                        </p>
+                                    </div>
+                                </li>
+                                {% endfor %}

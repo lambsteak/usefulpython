@@ -1,0 +1,41 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+{% block title %}TechKnack - Search results{% endblock %}
+{% block heading %}Search results for '{{ querykey }}'{% endblock %}
+{% block content %}
+
+<div class="panel-body">
+                            <ul class="chat">
+                                {% for post in posts %}
+                                    <a href="/blog/{{ post.link }}">
+                                    <li class="left clearfix">
+                                    <span class="chat-img pull-left">
+                                        <img class="d-flex mr-3 rounded-circle" src="{{ post.cover.url }}"
+                                             alt="" width="120" height="120">
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{ post.title }}</strong>
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> {{ post.publish_on|naturaltime }}
+                                            </small>
+                                        </div>
+                                        <p class="ml-3">
+                                            {{ post.snippet }}<br>
+                                            <a href="/columnists/{{ post.authors.all.0.link }}"
+                                               style="color:black;"><i>by {{ post.authors.all.0.name }}</i></a>
+                                            <br>
+                                            {% for tag in post.tags.all %}
+                                            <a href="/categories/{{ tag.link }}">#{{ tag.name }} &nbsp;</a>
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                </li>
+                                        </a>
+                                {% endfor %}
+                            </ul>
+                        </div>
+{% endblock %}
+
+style="background-color:#400000;color:white;"
+style="background-color:#bf0000;color:white;"

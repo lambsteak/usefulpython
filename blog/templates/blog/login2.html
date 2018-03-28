@@ -1,0 +1,61 @@
+<a id="google_login" href="/accounts/google/login" class="btn btn-success">Log in with
+Google</a>
+<br>
+<a id="twitter_login" href="/accounts/twitter/login" class="btn btn-success">Log in with
+Twitter</a>
+<br>
+<a id="fb_login" href="/accounts/facebook/login" class="btn btn-success">Log in with
+Facebook</a>
+
+<script>
+
+function post(path, params, method) {
+method = method || "post"; // Set method to post by default if not specified.
+
+// The rest of this code assumes you are not using a library.
+// It can be made less wordy if you use one.
+var form = document.createElement("form");
+form.setAttribute("method", method);
+form.setAttribute("action", path);
+
+for(var key in params) {
+if(params.hasOwnProperty(key)) {
+var hiddenField = document.createElement("input");
+hiddenField.setAttribute("type", "hidden");
+hiddenField.setAttribute("name", key);
+hiddenField.setAttribute("value", params[key]);
+
+form.appendChild(hiddenField);
+}
+}
+var hiddenField = document.createElement("input");
+hiddenField.setAttribute("type", "hidden");
+hiddenField.setAttribute("name", "csrfmiddlewaretoken");
+hiddenField.setAttribute("value", "{{ csrf_token }}");
+form.appendChild(hiddenField);
+
+document.body.appendChild(form);
+form.submit();
+}
+
+
+function goog() {
+window.event.preventDefault();
+// alert('12');
+post('/accounts/google/login/');
+}
+function twit() {
+window.event.preventDefault();
+post('/accounts/twitter/login/');
+}
+function fb() {
+window.event.preventDefault();
+post('/accounts/facebook/login/');
+}
+gg = document.querySelector('#google_login');
+gg.addEventListener('click', goog, true);
+gg = document.querySelector('#twitter_login');
+gg.addEventListener('click', twit, true);
+gg = document.querySelector('#fb_login');
+gg.addEventListener('click', fb, true);
+</script>
