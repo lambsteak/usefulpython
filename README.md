@@ -1,5 +1,7 @@
+Disclaimer: The UsefulPython.com domain is no longer held by me.
+
 # usefulpython
-### Codebase driving [UsefulPython.com](https://usefulpython.com) - a  Django powered Python blog, news and tools website.
+### Codebase driving the previous [UsefulPython.com](https://usefulpython.com) - a  Django powered Python blog, news and tools website.
 
 The website is mostly written from scratch, using a base Bootstrap theme for front-end.
 
